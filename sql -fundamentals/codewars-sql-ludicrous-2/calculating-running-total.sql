@@ -16,12 +16,12 @@
 -- count - (INT) number of posts for a date
 -- total - (INT) a running (cumulative) number of posts up until a date
 
-
+WITH cte AS (SELECT created_at::date AS date FROM posts)
 SELECT
-    DATE(created_at) as date,
-    COUNT(*) as count,
-    SUM(COUNT(*)) OVER (ORDER BY DATE(created_at)) as total
-FROM
-    posts
-GROUP BY DATE(created_at)
-ORDER BY DATE(created_at);
+    date,
+    count(date) as count,
+    SUM(COUNT(date)) OVER (ORDER BY date)::int AS total
+from
+    cte
+group by date
+order by date;
