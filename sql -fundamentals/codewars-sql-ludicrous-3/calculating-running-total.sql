@@ -37,6 +37,6 @@ FROM
         JOIN
             details d ON p.id = d.product_id
         GROUP BY p.name, d.detail
-        ORDER BY 1, 2'
+        ORDER BY p.name, d.detail'
     )
 AS ct (name TEXT, bad BIGINT, good BIGINT, ok BIGINT);
