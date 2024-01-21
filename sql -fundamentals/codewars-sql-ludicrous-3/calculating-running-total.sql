@@ -22,15 +22,21 @@
 
 -- Compare your table to the expected table to view the expected results.
 
-CREATE EXTENSION IF NOT EXISTS tablefunc;
+CREATE EXTENSION tablefunc;
 
 SELECT
     *
 FROM
     crosstab(
-        'SELECT p.name, d.detail, count(d.detail)
-        FROM products p
-        JOIN details d ON p.id = d.product_id
+        'SELECT
+            p.name,
+            d.detail,
+            COUNT(d.detail)
+        FROM
+            products p
+        JOIN
+            details d ON p.id = d.product_id
         GROUP BY p.name, d.detail
-        ORDER BY p.name, d.detail'
-    ) AS ct (name text, bad bigint, good bigint, ok bigint);
+        ORDER BY 1, 2'
+    )
+AS ct (name TEXT, bad BIGINT, good BIGINT, ok BIGINT);
