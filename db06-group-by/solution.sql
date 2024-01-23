@@ -43,3 +43,48 @@ CREATE TABLE `player` (
 --      Retourne la liste des joueurs de son équipe qui ont été enrôlés un lundi (il souhaite les faire jouer en priorité),
 --      et classe les résultats par date d’enrôlement chronologique.
 
+-- 1.
+SELECT
+    t.name,
+    COUNT(p.id) AS number_of_players
+FROM
+    team t
+INNER JOIN player p ON
+    t.id = p.team_id
+GROUP BY
+    t.name
+ORDER BY
+    number_of_players DESC;
+
+-- 2.
+SELECT
+    t.name
+FROM
+    team t
+INNER JOIN player p ON
+    t.id = p.team_id
+GROUP BY
+    t.name
+HAVING
+    COUNT(p.id) >= 14
+ORDER BY
+    t.name;
+
+-- 3.
+SELECT
+    w.firstname,
+    w.lastname,
+    t.name as team_name,
+    p.enrollment_date,
+    DAYNAME(p.enrollment_date) as dayname
+FROM
+    player p
+INNER JOIN wizard w ON
+    p.wizard_id = w.id
+INNER JOIN team t ON
+    p.team_id = t.id
+WHERE
+    t.name = 'Gryffindor'
+    AND DAYNAME(p.enrollment_date) = 'Monday'
+ORDER BY
+    p.enrollment_date;
