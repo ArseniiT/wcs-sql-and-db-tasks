@@ -14,14 +14,26 @@
 -- (1 row)
 
 
-CREATE OR REPLACE FUNCTION weekdays(date, date) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION weekdays(date1 DATE, date2 DATE) RETURNS INTEGER AS $$
+DECLARE
+  start_date DATE;
+  end_date DATE;
+BEGIN
+  IF date1 > date2 THEN
+    start_date := date2;
+    end_date := date1;
+  ELSE
+    start_date := date1;
+    end_date := date2;
+  END IF;
 
-  SELECT
-    COUNT(*)
-  FROM
-    generate_series($1, $2, '1 day') AS all_days
-  WHERE
-    EXTRACT(DOW FROM all_days) BETWEEN 1 AND 5;
-
-$$ LANGUAGE SQL;
-
+  RETURN (
+    SELECT
+      COUNT(*)
+    FROM
+      generate_series(start_date, end_date, '1 day') AS all_days
+    WHERE
+      EXTRACT(DOW FROM all_days) BETWEEN 1 AND 5
+  );
+END;
+$$ LANGUAGE plpgsql;
